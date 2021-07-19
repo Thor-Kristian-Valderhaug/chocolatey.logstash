@@ -1,14 +1,29 @@
 ﻿$ErrorActionPreference = 'Stop'
 
-$PackageName = 'logstash'
-$url32       = '__URL__'
-$checksum32  = '__HASH__'
+$PackageName    = 'logstash'
+$url32          = '__URL__'
+$checksum32     = '__HASH__'
+$Version        = '__VERSION__'
+$unzipLocation  = Split-Path $MyInvocation.MyCommand.Definition
+
+$binFiles = @(
+  @{
+    name = 'logstash' 
+    path = Join-Path $unzipLocation "logstash-$version\\bin\\logstash.bat"
+  },
+  @{
+    name = 'logstash_plugin'
+    path = Join-Path $unzipLocation "logstash-$version\\bin\\logstash_plugin.bat"
+  }
+)
 
 $packageArgs = @{
   packageName    = $packageName
   url            = $url32
   checksum       = $checksum32
   checksumType   = 'sha256'
-  unzipLocation  = Split-Path $MyInvocation.MyCommand.Definition
+  unzipLocation  = $unzipLocation
 }
+
 Install-ChocolateyZipPackage @packageArgs
+$binFiles | ForEach-Object { Install-BinFile -Name $_.name -Path $_.path }
