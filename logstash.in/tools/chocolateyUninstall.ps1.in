@@ -1,0 +1,4 @@
+$ErrorActionPreference = 'Stop'
+
+$binFiles = @('logstash', 'logstash_plugin')
+$binFiles | ForEach-Object { Uninstall-BinFile -Name $_ }

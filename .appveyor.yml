@@ -48,10 +48,12 @@ build_script:
 
         $nuspecTemplate = Get-Content "logstash.in/logstash.nuspec.in"
         $installTemplate = Get-Content "logstash.in/tools/chocolateyInstall.ps1.in"
+        $unInstallTemplate = Get-Content "logstash.in/tools/chocolateyUninstall.ps1.in"
 
         $version | Out-File .version
         $nuspecTemplate.replace("__URL__", $url).replace("__VERSION__", $version).replace("__HASH__", $hash) | Out-File "logstash/logstash.nuspec"
         $installTemplate = $installTemplate.replace("__URL__", $url).replace("__VERSION__", $version).replace("__HASH__", $hash) | Out-File "logstash/tools/chocolateyInstall.ps1"
+        $unInstallTemplate | Out-File "logstash/tools/chocolateyUninstall.ps1"
 
         choco pack .\logstash\logstash.nuspec
         choco push -k $($env:choco_key) .\logstash.$version.nupkg
